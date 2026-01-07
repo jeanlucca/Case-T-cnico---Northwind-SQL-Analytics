@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   db:
     container_name: db
@@ -9,14 +7,13 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
-      - postgresql_bin:/usr/lib/postgresql
-      - postgresql_data:/var/lib/postgresql/data
+      # Novo padrão: mapear a pasta pai para evitar o erro de versão
+      - postgresql_base:/var/lib/postgresql
       - ./northwind.sql:/docker-entrypoint-initdb.d/northwind.sql
-      - ./files:/files
     ports:
       - 55432:5432
     networks:
-      - db
+      - nw_northwind
 
   pgadmin:
     container_name: pgadmin
@@ -27,25 +24,16 @@ services:
       PGADMIN_LISTEN_PORT: 5050
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     volumes:
-      - postgresql_bin:/usr/lib/postgresql
-      - pgadmin_root_prefs:/root/.pgadmin
-      - pgadmin_working_dir:/var/lib/pgadmin
-      - ./files:/files
+      - pgadmin_data:/var/lib/pgadmin
     ports:
       - 5050:5050
     networks:
-      - db
+      - nw_northwind
 
 networks:
-  db:
+  nw_northwind:
     driver: bridge
 
 volumes:
-  pgadmin_root_prefs:
-    driver: local
-  pgadmin_working_dir:
-    driver: local
-  postgresql_data:
-    driver: local
-  postgresql_bin:
-    driver: local
+  postgresql_base:
+  pgadmin_data:
