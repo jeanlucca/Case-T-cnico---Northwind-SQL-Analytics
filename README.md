@@ -233,3 +233,4 @@ Configure um novo servidor no PgAdmin:
     ```
     docker-compose down -v
     ```
+# Case-T-cnico---Northwind-SQL-Analytics
